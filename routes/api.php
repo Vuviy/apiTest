@@ -19,9 +19,5 @@ use Illuminate\Support\Facades\Route;
 //});
 
 
-Route::get('test/{id}', function (Request $request, $id){
-    return 'sraka';
-});
-
 
 Route::get('token', [\App\Http\Controllers\Api\AuthController::class, 'getToken']);
