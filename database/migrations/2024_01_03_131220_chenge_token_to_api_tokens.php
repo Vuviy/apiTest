@@ -13,13 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('phone');
-            $table->timestamp('registration_timestamp');
-            $table->string('photo');
+        Schema::table('api_tokens', function (Blueprint $table) {
+            $table->string('token', 300)->change();
         });
     }
 
@@ -30,6 +25,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::table('api_tokens', function (Blueprint $table) {
+            $table->string('token', 255)->change();
+
+        });
     }
 };
