@@ -16,8 +16,6 @@ class User extends Authenticatable
 
     protected $guarded = false;
 
-
-
     public function position(): BelongsTo
     {
         return $this->belongsTo(Position::class);

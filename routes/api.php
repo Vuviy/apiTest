@@ -20,8 +20,12 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::get('token', [\App\Http\Controllers\Api\AuthController::class, 'getToken']);
+Route::get('token', [\App\Http\Controllers\Api\AuthController::class, 'getToken'])->name('token');
 
 
 Route::get('users', [\App\Http\Controllers\Api\UserController::class, 'getAll']);
 Route::get('users/{id}', [\App\Http\Controllers\Api\UserController::class, 'get']);
+Route::post('users', [\App\Http\Controllers\Api\UserController::class, 'create'])->name('send');
+
+
+Route::get('positions', [\App\Http\Controllers\Api\PositionController::class, 'getAll']);

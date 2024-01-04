@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserResourceCollection;
+use App\Models\ApiToken;
+use App\Models\Position;
 use App\Models\User;
+use App\Services\ImageCropService;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -125,7 +129,80 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
-    public function create(){
-//
+
+
+
+
+    public function create(UserRequest $request){
+
+//        Validation token
+        $token = $request->header('Token');
+
+        if(!$token){
+            $data = [
+                'success' => false,
+                'message' => 'The token not exist.'
+            ];
+            return response()->json($data, 401);
+        }
+
+        $token = ApiToken::query()->where('token', $token)->first();
+
+        $created = strtotime($token->created_at);
+        $end = $created + (40*60);
+        $now = strtotime(now());
+        $status = $now<$end;
+
+        if(!$status){
+            $data = [
+                'success' => false,
+                'message' => 'The token expired.'
+            ];
+            return response()->json($data, 401);
+        }
+//        Delete token
+        $token->delete();
+//        End of Validation token
+
+        $data = $request->validated();
+
+        $user = User::query()
+            ->where('email', $data['email'])
+            ->orWhere('phone', $data['phone'])
+            ->first();
+
+        if($user){
+            $data = [
+                'success' => false,
+                'message' => 'User with this phone or email already exist',
+            ];
+            return response()->json($data, 409);
+        }
+
+        if(!Position::query()->find($request->position_id)){
+            $data = [
+                'success' => false,
+                'message' => 'Position with this id not exist',
+            ];
+            return response()->json($data, 404);
+        }
+
+
+        $cropService = new ImageCropService();
+//        $file = $request->file('photo')->store('images');
+        $file =  $cropService->save($request->file('photo'));
+        $data['photo'] = $file;
+        $user = User::query()->create($data);
+
+        $data = [
+            'success' => true,
+            'user_id' => $user->id,
+            'message' => 'New user successfully registered',
+        ];
+        return response()->json($data, 200);
+
+
+
+
     }
 }
