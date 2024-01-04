@@ -1,5 +1,9 @@
 
 
 
-GET http://localhost:8000/apiTest/public/api/token
+#GET http://localhost:8000/apiTest/public/api/token
+#Accept: application/json
+
+
+GET http://localhost:8000/apiTest/public/api/v1/users
 Accept: application/json
