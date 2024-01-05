@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\ApiToken;
 use App\Models\Position;
 use App\Models\User;
+use http\Client\Response;
 use Illuminate\Http\Request;
 
 class Validator
@@ -88,8 +89,7 @@ class Validator
             ];
             return response()->json($data, 404);
         }
-
-        return $user;
+            return $user;
     }
 
     public static function checkToken(Request $request)
@@ -103,6 +103,7 @@ class Validator
             ];
             return response()->json($data, 401);
         }
+
 
         $token = ApiToken::query()->where('token', $token)->first();
 

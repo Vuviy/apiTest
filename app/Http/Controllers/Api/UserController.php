@@ -12,7 +12,9 @@ use App\Models\Position;
 use App\Models\User;
 use App\Services\ImageCropService;
 use App\Services\Validator;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Psy\Util\Json;
 
 class UserController extends Controller
 {
@@ -21,6 +23,10 @@ class UserController extends Controller
         $validator = new Validator($request);
 
         $validator->validateAllUsers();
+
+        if(is_object($validator->validateAllUsers())){
+            return $validator->validateAllUsers();
+        }
         $page = $validator->page;
         $offset = $validator->offset;
         $count = $validator->count;
@@ -62,17 +68,30 @@ class UserController extends Controller
 
     public function get($id)
     {
+
         $user = Validator::validateUser($id);
+
+        if(get_class($user) !== 'App\Models\User'){
+            return $user;
+        }
         return new UserResource($user);
     }
 
 
     public function create(UserRequest $request){
 
-        Validator::checkToken($request);
-        $data = $request->validated();
-        Validator::validateCreateUser($data);
+        $invalid = Validator::checkToken($request);
 
+        if($invalid){
+            return $invalid;
+        }
+
+        $data = $request->validated();
+        $invalid = Validator::validateCreateUser($data);
+
+        if($invalid){
+            return $invalid;
+        }
         $cropService = new ImageCropService();
         $file =  $cropService->save($request->file('photo'));
         $data['photo'] = $file;
