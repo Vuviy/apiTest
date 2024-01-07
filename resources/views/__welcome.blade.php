@@ -98,6 +98,10 @@
     let url = window.location.href + 'api/v1/users'
 
     btnList.addEventListener('click', function (){
+
+        console.log(url);
+
+
         container.innerHTML = ''
         if(page.value || count.value || offset.value){
             url += '?';
@@ -224,7 +228,7 @@
 
 
         let token = ''
-        let urlToken = url = window.location.href + 'api/v1/token'
+        let urlToken = window.location.href + 'api/v1/token'
 
             fetch(urlToken)
                 .then(function(response) {
@@ -243,7 +247,7 @@
 
         setTimeout(() => {
 
-            fetch('http://localhost:8000/apiTest/public/api/v1/users',
+            fetch(window.location.href + 'api/v1/users',
                 { method: 'POST', body: formData, headers:
                         {'Token': token},
                 })
@@ -279,7 +283,7 @@
                     //proccess network errors
                 });
 
-        }, 950);
+        }, 1100);
 
     })
 

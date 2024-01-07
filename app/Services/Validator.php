@@ -104,7 +104,6 @@ class Validator
             return response()->json($data, 401);
         }
 
-
         $token = ApiToken::query()->where('token', $token)->first();
 
         $created = strtotime($token->created_at);
