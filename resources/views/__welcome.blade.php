@@ -65,7 +65,13 @@
         </div>
         <div class="mb-3">
             <label for="exampleInpuds" class="form-label">Position id</label>
-            <input type="number" name="position_id" class="form-control" id="exampleInpuds">
+{{--            <input type="number" name="position_id" class="form-control" id="exampleInpuds">--}}
+
+            <select class="form-select" name="position_id" aria-label="Default select example">
+                @foreach($positions as $position)
+                    <option value="{{$position->id}}">{{$position->name}}</option>
+                @endforeach
+            </select>
         </div>
         <div class="mb-3">
             <label for="exampleInpudsdcs" class="form-label">Photo</label>
@@ -220,7 +226,7 @@
     btnCreate.addEventListener('click', function (){
         var formData = new FormData(); // file from input type='file'
         var fileField = document.querySelector('input[type="file"]');
-        formData.append('position_id', document.querySelector('input[name="position_id"]').value);
+        formData.append('position_id', document.querySelector('select[name="position_id"]').value);
         formData.append('name', document.querySelector('input[name="name"]').value);
         formData.append('email', document.querySelector('input[name="email"]').value);
         formData.append('phone', document.querySelector('input[name="phone"]').value);

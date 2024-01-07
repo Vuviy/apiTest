@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('__welcome');
+    $positions = Position::all();
+    return view('__welcome', compact('positions'));
 });
 
 //Route::get('/', [\App\Http\Controllers\Api\AuthController::class, 'test']);
