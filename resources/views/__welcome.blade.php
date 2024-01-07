@@ -45,7 +45,7 @@
         </div>
     </div>
 
-    <div class="mt-5">
+    <div class="mt-5 mb-5">
 {{--    <form action="{{route('send')}}" method="post" enctype="multipart/form-data">--}}
 {{--    <form>--}}
 {{--        @csrf--}}
@@ -252,20 +252,23 @@
                 .then(function(data)
                 {
                     if(data.success == false){
-
-
-                        let message = ''
-                        data.fails.forEach(item => {
-                            console.log(item);
-                            message += item
-                        })
-                        console.log(message);
-                        alert(message)
+                        // let message = ''
+                        // data.fails.forEach(item => {
+                        //     console.log(item);
+                        //     message += item
+                        // })
+                        // console.log(data.message);
+                        alert(data.message)
                     }
                     // console.log(data);
                     if(data.success)
                     {
-                        // alert(data.message)
+                        alert(data.message)
+                        document.querySelector('input[type="file"]').value = ''
+                         document.querySelector('input[name="position_id"]').value = ''
+                         document.querySelector('input[name="name"]').value = ''
+                         document.querySelector('input[name="email"]').value = ''
+                         document.querySelector('input[name="phone"]').value = ''
                         // process success response
                     } else {
                         // proccess server errors
@@ -276,7 +279,7 @@
                     //proccess network errors
                 });
 
-        }, 2000);
+        }, 950);
 
     })
 

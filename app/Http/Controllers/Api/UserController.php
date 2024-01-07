@@ -80,10 +80,10 @@ class UserController extends Controller
 
     public function create(UserRequest $request){
 
-        $invalid = Validator::checkToken($request);
+        $invalidToken = Validator::checkToken($request);
 
-        if($invalid){
-            return $invalid;
+        if($invalidToken){
+            return $invalidToken;
         }
 
         $data = $request->validated();

@@ -27,9 +27,6 @@ class ImageCropService
 
     private function send(UploadedFile $photo)
     {
-//        $body = [
-//            'source'=> ['url'=> 'https://static.scientificamerican.com/sciam/cache/file/4FEB5C93-F6DA-475B-9FB7C0A2A73227E9_source.jpg?w=900']
-//        ];
 
         $body = $photo->get();
 

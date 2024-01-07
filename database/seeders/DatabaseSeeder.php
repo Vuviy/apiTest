@@ -27,9 +27,6 @@ class DatabaseSeeder extends Seeder
             PositionSeeder::class,
         ]);
 
-
          User::factory(45)->create();
-
-
     }
 }
