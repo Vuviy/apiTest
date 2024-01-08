@@ -22,8 +22,6 @@ class UserController extends Controller
 
         $validator = new Validator($request);
 
-        $validator->validateAllUsers();
-
         if(is_object($validator->validateAllUsers())){
             return $validator->validateAllUsers();
         }
@@ -52,6 +50,18 @@ class UserController extends Controller
         $users = UserResourceCollection::collection(User::query()->offset($offsetBd)->limit($count)->get());
 
 
+        $base_url = explode('/api/v1', url()->current());
+
+        $next = $page != $total_pages ? $base_url[0].'?page='. $page +1 : null;
+        $prev = $page > 1 ? $base_url[0].'?page='. $page - 1 : null;
+
+        $next = $next ? $next.'&count='. $count : null;
+        $prev = $prev ? $prev.'&count='. $count : null;
+
+        $next = $next ? $offset > 0 ? $next.'&offset='. $offset : $next : null;
+        $prev = $prev ? $offset > 0 ? $prev.'&offset='. $offset : $prev : null;
+
+
         return response()->json([
             "success" => true,
             "page" => $page,
@@ -59,8 +69,8 @@ class UserController extends Controller
             "total_users" => $total_users,
             "count" => intval($total_users - $offsetBd < $count ? $total_users - $offsetBd : $count),
             'links' => [
-                "next_url" => $page != $total_pages ? url()->current().'?page='. $page +1 : null,
-                "prev_url" => $page > 1 ? url()->current().'?page='. $page - 1 : null
+                "next_url" => $next,
+                "prev_url" => $prev,
             ],
             'users' => $users,
         ], 200);

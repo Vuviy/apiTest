@@ -15,10 +15,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    $positions = Position::all();
-    return view('__welcome', compact('positions'));
-});
+//Route::get('/', function () {
+//
+//    return redirect()->route('home');
+//});
+
+
+Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
 
 //Route::get('/', [\App\Http\Controllers\Api\AuthController::class, 'test']);
 

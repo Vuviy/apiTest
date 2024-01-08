@@ -11,10 +11,6 @@
 <body>
 
 <div class="d-flex justify-content-center mt-5 flex-column" style="width: 50%; margin-right: auto; margin-left: auto">
-
-
-
-
     <div class="mt-5">
         <div class="d-flex justify-content-center">
             <button class="btn-list btn btn-primary btn-lg m-3">Show more</button>
@@ -35,13 +31,29 @@
             </div>
         </div>
         <div class="container mt-3">
-{{--            <div class="item border border-secondary p-3 mt-3">--}}
-{{--                <p>Name: <span>Rick</span></p>--}}
-{{--                <p>Phone: <span>+3898598695865</span></p>--}}
-{{--                <p>Email: <span>fgcfg@vgvg.cdsc</span></p>--}}
-{{--                <p>Position: <span>Docktor</span></p>--}}
-{{--                <img width="70px" height="70px" src="{{asset('storage/images/'). '/dchdvchjd.jpg'}}" alt="">--}}
-{{--            </div>--}}
+
+            @if($users)
+                @foreach($users as $user)
+
+                <div class="item border border-secondary p-3 mt-3">
+                    <p>Id: <span>{{$user->id}}</span></p>
+                    <p>Name: <span>{{$user->name}}</span></p>
+                    <p>Phone: <span>{{$user->phone}}</span></p>
+                    <p>Email: <span>{{$user->email}}</span></p>
+                    <p>Position: <span>{{$user->position->name}}</span></p>
+                    <img width="70px" height="70px"
+                         src="{{ strpos($user->photo, 'http')!== false ? $user->photo : asset('storage').'/'.$user->photo}}" alt="">
+                </div>
+                @endforeach
+                    <div>
+                        @if($links['prev'])
+                            <a href="{{$links['prev']}}">Prev</a>
+                        @endif
+                        @if($links['next'])
+                            <a href="{{$links['next']}}">Next</a>
+                        @endif
+                    </div>
+            @endif
         </div>
     </div>
 
@@ -101,12 +113,9 @@
     let count = document.querySelector('input[name="count"]');
     let offset = document.querySelector('input[name="offset"]');
     // let url = 'http://localhost:8000/apiTest/public/api/v1/users'
-    let url = window.location.href + 'api/v1/users'
+    let url = window.location.href.split('?')[0] + 'api/v1/users'
 
     btnList.addEventListener('click', function (){
-
-        console.log(url);
-
 
         container.innerHTML = ''
         if(page.value || count.value || offset.value){
@@ -126,7 +135,7 @@
             .then(function(response) {
 
                 if(!response.ok){
-                    url = window.location.href + 'api/v1/users'
+                    url = window.location.href.split('?')[0] + 'api/v1/users'
                     page.value = 0
                     count.value = 0
                     offset.value = 0
@@ -181,7 +190,7 @@
                     let photo = document.createElement('img');
                     let src = item.photo
                     if(item.photo.startsWith('images')){
-                        src = window.location.href + 'storage/' + item.photo;
+                        src = window.location.href.split('?')[0] + 'storage/' + item.photo;
                     }
                     photo.setAttribute('src', src);
                     listItem.appendChild(photo);
@@ -190,21 +199,27 @@
 
                 });
 
-                let prev = document.createElement('a');
-                prev.textContent = 'Prev';
-                prev.setAttribute('href', data.links.prev_url);
-
-                let next = document.createElement('a');
-                next.textContent = 'Next';
-                next.setAttribute('href', data.links.next_url);
+                console.log(data.links)
 
                 let divLinks = document.createElement('div');
 
-                divLinks.appendChild(prev);
-                divLinks.appendChild(next);
+                if(data.links.prev_url){
+                    let prev = document.createElement('a');
+                    prev.textContent = 'Prev';
+                    prev.setAttribute('href', data.links.prev_url);
+                    divLinks.appendChild(prev);
+                }
+
+                if(data.links.next_url){
+                    let next = document.createElement('a');
+                    next.textContent = 'Next';
+                    next.setAttribute('href', data.links.next_url);
+                    divLinks.appendChild(next);
+                }
+
                 container.appendChild(divLinks);
 
-                url = window.location.href + 'api/v1/users'
+                url = window.location.href.split('?')[0] + 'api/v1/users'
                 page.value = 0
                 count.value = 0
                 offset.value = 0
@@ -234,7 +249,7 @@
 
 
         let token = ''
-        let urlToken = window.location.href + 'api/v1/token'
+        let urlToken = window.location.href.split('?')[0] + 'api/v1/token'
 
             fetch(urlToken)
                 .then(function(response) {
@@ -253,7 +268,7 @@
 
         setTimeout(() => {
 
-            fetch(window.location.href + 'api/v1/users',
+            fetch(window.location.href.split('?')[0] + 'api/v1/users',
                 { method: 'POST', body: formData, headers:
                         {'Token': token},
                 })
@@ -275,7 +290,7 @@
                     {
                         alert(data.message)
                         document.querySelector('input[type="file"]').value = ''
-                         document.querySelector('input[name="position_id"]').value = ''
+                         document.querySelector('select[name="position_id"]').value = ''
                          document.querySelector('input[name="name"]').value = ''
                          document.querySelector('input[name="email"]').value = ''
                          document.querySelector('input[name="phone"]').value = ''
